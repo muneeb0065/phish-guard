@@ -1,0 +1,114 @@
+/* 1. ROOT SETTINGS */
+/* This targets the main wrapper of the React app. */
+#root {
+  width: 300px;
+  /* CRITICAL: Forces the popup to be wide enough so it doesn't look squished. */
+  margin: 0 auto;
+  /* Centers the content horizontally. */
+  padding: 1rem;
+  /* Adds breathing room around the edges. */
+  text-align: center;
+  /* Centers all text by default. */
+  font-family: sans-serif;
+  /* Uses a clean, standard font (like Arial). */
+}
+
+/* 2. LAYOUT CONTAINER */
+.container {
+  display: flex;
+  /* "Flexbox" allows us to stack items easily. */
+  flex-direction: column;
+  /* Stacks items vertically (top to bottom). */
+  gap: 15px;
+  /* Adds 15px of space between every item in the stack. */
+}
+
+/* 3. TEXT STYLES */
+h1 {
+  margin: 0;
+  color: #333;
+  /* Dark grey instead of pure black (easier on eyes). */
+}
+
+h2 {
+  color: #007bff;
+  /* Bright blue for the website name to make it stand out. */
+  margin: 5px 0 15px 0;
+  word-break: break-all;
+  /* IMPORTANT: If a URL is super long, break it to the next line instead of breaking the layout. */
+}
+
+/* 4. CARD BOX */
+.card {
+  border: 1px solid #ddd;
+  /* A thin light-grey border. */
+  padding: 15px;
+  border-radius: 8px;
+  /* Rounded corners make it look modern. */
+  background-color: #f9f9f9;
+  /* Very light grey background to separate it from the white page. */
+}
+
+/* 5. BUTTON STYLES */
+button {
+  background-color: #007bff;
+  /* Main brand blue. */
+  color: white;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  /* Makes the button fill the entire width of the card. */
+  border-radius: 4px;
+  cursor: pointer;
+  /* Shows the little hand icon when you hover. */
+  font-size: 1rem;
+}
+
+/* Change color slightly when hovering so the user knows it's clickable */
+button:hover {
+  background-color: #0056b3;
+  /* Darker blue. */
+}
+
+/* 6. STATUS BOXES */
+.status-box {
+  padding: 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Green box for Safe */
+.safe {
+  background-color: #d4edda;
+  /* Light green background */
+  color: #155724;
+  /* Dark green text */
+}
+
+/* Yellow box for Scanning/Checking */
+.scanning,
+.checking {
+  background-color: #fff3cd;
+  /* Light yellow background */
+  color: #856404;
+  /* Dark yellow/brown text */
+}
+
+/* Red box for Danger (we will use this later) */
+.danger {
+  background-color: #f8d7da;
+  /* Light red background */
+  color: #721c24;
+  /* Dark red text */
+}
+
+.warning-box {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 10px;
+  border: 1px solid #ffeeba;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
