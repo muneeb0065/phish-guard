@@ -1,34 +1,40 @@
-// This script runs INSIDE the web page (e.g., inside Gmail)
+// --- CONTENT SCRIPT ---
+// This file does NOT run in the popup. 
+// It runs INSIDE the actual web page (e.g., inside the Gmail tab).
 
-// Listen for a message from the React Popup
+// 1. Listen for messages from the Popup (App.jsx)
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
+    // If the popup says "SCAN_PAGE", we start working
     if (request.action === "SCAN_PAGE") {
         console.log("PhishGuard: Scanning all links on page...");
 
-        // 1. Get ALL links on the page
+        // 2. Get every single <a> tag (link) on the screen
         const allLinks = document.querySelectorAll('a');
         let threatsFound = [];
 
-        // 2. Loop through every link
+        // 3. Loop through each link to check it
         allLinks.forEach(link => {
-            const url = link.href;
-            const text = link.innerText; // The text the user sees (e.g., "Click Here")
+            const url = link.href;       // The real destination (where it goes)
+            const text = link.innerText; // The visible text (what you read)
 
-            // --- HEURISTIC RULES ---
+            // --- HEURISTIC RULES (The Logic) ---
 
-            // Rule A: IP Address
+            // Rule A: IP Address Check
+            // Does the link look like http://192.168.1.1?
             if (url.match(/^[a-zA-Z]+:\/\/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/)) {
                 threatsFound.push({
                     url: url,
                     reason: "Link points to a raw IP address"
                 });
-                // Highlight the bad link on the page visually
+
+                // Highlight the bad link in Red/Yellow so the user sees it
                 link.style.border = "3px solid red";
                 link.style.backgroundColor = "yellow";
             }
 
             // Rule B: Typosquatting (Fake Brands)
+            // Does it look like "faceboook" or "goggle"?
             const badBrands = ["faceboook", "goggle", "paypaI", "amazonn"];
             if (badBrands.some(brand => url.includes(brand))) {
                 threatsFound.push({
@@ -38,8 +44,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 link.style.border = "3px solid red";
             }
 
-            // Rule C: Mismatched Text (The " Bait and Switch")
-            // Example: Text says "google.com" but link goes to "evil.com"
+            // Rule C: The "Bait and Switch"
+            // Does the text say "google.com" but the link goes to "evil.com"?
             if (text.includes("google.com") && !url.includes("google.com")) {
                 threatsFound.push({
                     url: url,
@@ -49,7 +55,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }
         });
 
-        // 3. Send the list of bad links back to React
+        // 4. Send the report back to the Popup
         sendResponse({
             count: threatsFound.length,
             threats: threatsFound

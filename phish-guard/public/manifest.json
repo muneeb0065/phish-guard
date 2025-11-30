@@ -1,15 +1,21 @@
 {
     "manifest_version": 3,
-    "name": "PhishGuard Content Scanner",
+    "name": "PhishGuard",
     "version": "1.0",
-    "description": "Scans links inside emails and webpages for phishing.",
+    "description": "Scans websites and emails for phishing links.",
     "permissions": [
         "activeTab",
         "scripting"
     ],
     "action": {
         "default_popup": "index.html",
-        "default_title": "Scan Page Content"
+        "default_title": "PhishGuard Security",
+        "default_icon": "icon.png"
+    },
+    "icons": {
+        "16": "icon.png",
+        "48": "icon.png",
+        "128": "icon.png"
     },
     "content_scripts": [
         {

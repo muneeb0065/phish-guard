@@ -1,144 +1,271 @@
-/* 1. ROOT SETTINGS */
-/* This targets the main wrapper of the React app. */
+/* RESET & BASE */
 #root {
-  width: 300px;
-  /* CRITICAL: Forces the popup to be wide enough so it doesn't look squished. */
-  margin: 0 auto;
-  /* Centers the content horizontally. */
-  padding: 1rem;
-  /* Adds breathing room around the edges. */
-  text-align: center;
-  /* Centers all text by default. */
-  font-family: sans-serif;
-  /* Uses a clean, standard font (like Arial). */
+  width: 340px;
+  margin: 0;
+  padding: 15px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: #f8fafc;
+  color: #334155;
 }
 
-/* 2. LAYOUT CONTAINER */
 .container {
   display: flex;
-  /* "Flexbox" allows us to stack items easily. */
   flex-direction: column;
-  /* Stacks items vertically (top to bottom). */
   gap: 15px;
-  /* Adds 15px of space between every item in the stack. */
 }
 
-/* 3. TEXT STYLES */
-h1 {
+/* HEADER */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-area h1 {
+  font-size: 1.25rem;
+  font-weight: 800;
   margin: 0;
-  color: #333;
-  /* Dark grey instead of pure black (easier on eyes). */
+  color: #0f172a;
+  letter-spacing: -0.5px;
 }
 
-h2 {
-  color: #007bff;
-  /* Bright blue for the website name to make it stand out. */
-  margin: 5px 0 15px 0;
-  word-break: break-all;
-  /* IMPORTANT: If a URL is super long, break it to the next line instead of breaking the layout. */
+.shield-icon {
+  font-size: 1.5rem;
 }
 
-/* 4. CARD BOX */
-.card {
-  border: 1px solid #ddd;
-  /* A thin light-grey border. */
-  padding: 15px;
-  border-radius: 8px;
-  /* Rounded corners make it look modern. */
-  background-color: #f9f9f9;
-  /* Very light grey background to separate it from the white page. */
-}
-
-/* 5. BUTTON STYLES */
-button {
-  background-color: #007bff;
-  /* Main brand blue. */
-  color: white;
+.info-btn {
+  background: none;
   border: none;
-  padding: 10px;
-  width: 100%;
-  /* Makes the button fill the entire width of the card. */
-  border-radius: 4px;
+  font-size: 1.2rem;
   cursor: pointer;
-  /* Shows the little hand icon when you hover. */
-  font-size: 1rem;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  padding: 0;
+  width: auto;
 }
 
-/* Change color slightly when hovering so the user knows it's clickable */
-button:hover {
-  background-color: #0056b3;
-  /* Darker blue. */
+.info-btn:hover {
+  opacity: 1;
 }
 
-/* 6. STATUS BOXES */
-.status-box {
+/* INFO PANEL */
+.info-panel {
+  background: #e0f2fe;
   padding: 10px;
-  border-radius: 4px;
-  font-weight: bold;
-  margin-bottom: 15px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: #0369a1;
+  animation: slideDown 0.3s ease-out;
 }
 
-/* Green box for Safe */
-.safe {
-  background-color: #d4edda;
-  /* Light green background */
-  color: #155724;
-  /* Dark green text */
+.info-panel ul {
+  margin: 5px 0 0 0;
+  padding-left: 20px;
 }
 
-/* Yellow box for Scanning/Checking */
-.scanning,
-.checking {
-  background-color: #fff3cd;
-  /* Light yellow background */
-  color: #856404;
-  /* Dark yellow/brown text */
+/* MAIN STATUS CARD */
+.main-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
 }
 
-/* Red box for Danger (we will use this later) */
-.danger {
-  background-color: #f8d7da;
-  /* Light red background */
-  color: #721c24;
-  /* Dark red text */
+.safe-theme {
+  border-bottom: 4px solid #10b981;
 }
 
-.warning-box {
-  background-color: #fff3cd;
-  color: #856404;
-  padding: 10px;
-  border: 1px solid #ffeeba;
-  border-radius: 4px;
-  margin-bottom: 10px;
+.danger-theme {
+  border-bottom: 4px solid #ef4444;
+}
+
+.domain-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.domain-name {
+  margin: 5px 0 15px 0;
+  font-size: 1.1rem;
+  color: #1e293b;
+  word-break: break-all;
+}
+
+/* PROGRESS BAR */
+.progress-container {
+  width: 100%;
+  height: 6px;
+  background: #f1f5f9;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #3b82f6;
+  transition: width 0.3s ease;
+}
+
+.loading-text {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* SCORE DISPLAY */
+.score-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.score-val {
+  font-size: 2.5rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.safe-theme .score-val {
+  color: #10b981;
+}
+
+.danger-theme .score-val {
+  color: #ef4444;
+}
+
+.score-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #94a3b8;
+  margin-top: 5px;
+}
+
+/* DETAILS GRID */
+.details-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.detail-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 0.9rem;
+  font-weight: 600;
 }
 
-/* Keep your existing CSS and ADD this to the bottom */
+.badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.badge.safe {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.badge.danger {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.badge.error {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.risk-text,
+.threat-summary {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: #64748b;
+}
 
 .threat-list {
-  text-align: left;
-  margin-top: 15px;
-  font-size: 0.9rem;
+  max-height: 120px;
+  overflow-y: auto;
+  background: #fff1f2;
+  border-radius: 6px;
+  padding: 8px;
 }
 
 .threat-item {
-  background-color: #ffe6e6;
-  border: 1px solid #ffcccc;
-  padding: 8px;
-  margin-bottom: 5px;
-  border-radius: 4px;
-  list-style-type: none;
-  word-break: break-all;
+  border-bottom: 1px solid #fda4af;
+  padding-bottom: 6px;
+  margin-bottom: 6px;
 }
 
-.scan-btn {
-  background-color: #28a745;
+.threat-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.threat-item .reason {
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: #9f1239;
+}
+
+.threat-item .url {
+  font-size: 0.7rem;
+  color: #881337;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* BUTTONS */
+.rescan-btn {
+  background: #0f172a;
   color: white;
-  font-weight: bold;
+  border: none;
   padding: 12px;
-  margin-bottom: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s;
 }
 
-.scan-btn:hover {
-  background-color: #218838;
+.rescan-btn:active {
+  transform: scale(0.98);
+}
+
+.rescan-btn:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
