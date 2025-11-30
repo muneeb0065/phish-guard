@@ -112,3 +112,33 @@ button:hover {
   margin-bottom: 10px;
   font-size: 0.9rem;
 }
+
+/* Keep your existing CSS and ADD this to the bottom */
+
+.threat-list {
+  text-align: left;
+  margin-top: 15px;
+  font-size: 0.9rem;
+}
+
+.threat-item {
+  background-color: #ffe6e6;
+  border: 1px solid #ffcccc;
+  padding: 8px;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  list-style-type: none;
+  word-break: break-all;
+}
+
+.scan-btn {
+  background-color: #28a745;
+  color: white;
+  font-weight: bold;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.scan-btn:hover {
+  background-color: #218838;
+}

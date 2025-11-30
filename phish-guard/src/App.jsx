@@ -1,120 +1,72 @@
 /* global chrome */
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './App.css'
 
 function App() {
-  const [status, setStatus] = useState("Checking...")
-  const [siteName, setSiteName] = useState("Loading...")
-  const [riskReason, setRiskReason] = useState(null)
+  const [scanStatus, setScanStatus] = useState("Idle");
+  const [threatCount, setThreatCount] = useState(0);
+  const [threats, setThreats] = useState([]);
 
-  useEffect(() => {
-    if (typeof chrome !== "undefined" && chrome.tabs) {
-      // 1. EXTENSION MODE
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        const currentTab = tabs[0];
-        if (currentTab) {
-          const hostname = new URL(currentTab.url).hostname;
-          setSiteName(hostname);
-          analyzeSafety(hostname);
+  const scanPageContent = () => {
+    setScanStatus("Scanning...");
+    setThreats([]);
+
+    // 1. Find the active tab
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const activeTab = tabs[0];
+
+      // 2. Send a message to the content.js script inside that tab
+      // We say: "Hey content script, please SCAN_PAGE now!"
+      chrome.tabs.sendMessage(activeTab.id, { action: "SCAN_PAGE" }, (response) => {
+
+        // 3. Handle the response from the page
+        if (response) {
+          setThreatCount(response.count);
+          setThreats(response.threats);
+
+          if (response.count > 0) {
+            setScanStatus("Danger");
+          } else {
+            setScanStatus("Safe");
+          }
+        } else {
+          // If content script fails (e.g., on a settings page)
+          setScanStatus("Error");
         }
       });
-    } else {
-      // 2. TEST MODE (When running on localhost)
-      // Defaults to example.com so you can see the simulation work immediately
-      const testSite = "example.com";
-      setSiteName(testSite);
-      analyzeSafety(testSite);
-    }
-  }, []);
-
-  // --- THE LOGIC ---
-  const analyzeSafety = async (domain) => {
-
-    // 1. LOCAL CHECKS (Instant)
-    if (/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/.test(domain)) {
-      setStatus("Danger");
-      setRiskReason("This site uses a raw IP address.");
-      return;
-    }
-
-    if (domain.length > 50) {
-      setStatus("Danger");
-      setRiskReason("The URL is suspiciously long.");
-      return;
-    }
-
-    const suspiciousTypos = ["faceboook", "goggle", "paypaI", "amazonn"];
-    if (suspiciousTypos.some(t => domain.includes(t))) {
-      setStatus("Danger");
-      setRiskReason("This looks like a fake version of a popular brand.");
-      return;
-    }
-
-    // 2. REMOTE CHECKS (The "FBI" Database)
-    // If it passed local checks, we simulate an API call
-    setStatus("Checking DB..."); // <--- You should see this text appear!
-
-    // We wait for our fake database to answer
-    const isKnownPhishing = await checkPhishingDatabase(domain);
-
-    if (isKnownPhishing) {
-      setStatus("Danger");
-      setRiskReason("Flagged by Global Security Database as unsafe (SIMULATION).");
-    } else {
-      setStatus("Safe");
-      setRiskReason(null);
-    }
-  };
-
-  // --- MOCK API FUNCTION ---
-  const checkPhishingDatabase = async (domain) => {
-    return new Promise((resolve) => {
-      console.log(`Checking database for: ${domain}`); // Check your console for this!
-      setTimeout(() => {
-        // SIMULATION: "example.com" triggers the alarm
-        if (domain === "example.com") {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      }, 1500); // 1.5 second delay
     });
-  };
-
-  const handleRescan = () => {
-    setStatus("Scanning...");
-    setRiskReason(null);
-    setTimeout(() => {
-      // Force re-check of the current site name
-      analyzeSafety(siteName);
-    }, 500);
   };
 
   return (
     <div className="container">
       <header>
-        {/* LOOK FOR THIS PURPLE TEXT TO CONFIRM UPDATE */}
-        <h1>PhishGuard 🛡️ <span style={{ fontSize: '12px', color: 'purple' }}>(v6.0 FINAL)</span></h1>
+        <h1>PhishGuard 🛡️</h1>
+        <p style={{ fontSize: '12px', color: '#666' }}>Content Scanner</p>
       </header>
 
       <div className="card">
-        <p>You are visiting:</p>
-        <h2>{siteName}</h2>
+        <button onClick={scanPageContent} className="scan-btn">
+          SCAN LINKS ON PAGE
+        </button>
 
-        {riskReason && (
-          <div className="warning-box">
-            ⚠️ {riskReason}
-          </div>
-        )}
-
-        {/* This messy code handles the CSS class names for colors */}
-        <div className={`status-box ${status.toLowerCase().replace(/\./g, '').replace(' ', '-')}`}>
-          Status: {status}
+        <div className={`status-box ${scanStatus.toLowerCase()}`}>
+          Status: {scanStatus}
         </div>
 
-        <button onClick={handleRescan}>
-          Re-Scan Page
-        </button>
+        {/* Display the list of threats found */}
+        {threatCount > 0 && (
+          <div className="threat-list">
+            <h3>Found {threatCount} Threats:</h3>
+            <ul>
+              {threats.map((t, index) => (
+                <li key={index} className="threat-item">
+                  <strong>Reason:</strong> {t.reason}<br />
+                  <small>{t.url}</small>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -1,18 +1,24 @@
 {
     "manifest_version": 3,
-    "name": "PhishGuard",
+    "name": "PhishGuard Content Scanner",
     "version": "1.0",
-    "description": "React-based Phishing Detector",
+    "description": "Scans links inside emails and webpages for phishing.",
     "permissions": [
-        "activeTab"
+        "activeTab",
+        "scripting"
     ],
     "action": {
         "default_popup": "index.html",
-        "default_title": "Check Site Safety"
+        "default_title": "Scan Page Content"
     },
-    "icons": {
-        "16": "vite.svg",
-        "48": "vite.svg",
-        "128": "vite.svg"
-    }
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "content.js"
+            ]
+        }
+    ]
 }
